@@ -29,6 +29,7 @@ be = ["libafl_qemu_sys/be"]
 
 usermode = ["libafl_qemu_sys/usermode"]
 systemmode = ["libafl_qemu_sys/systemmode"]
+asan = []
 
 slirp = [ "systemmode", "libafl_qemu_sys/slirp" ] # build qemu with host libslirp (for user networking)
 

@@ -6,7 +6,7 @@ use std::{
 
 use which::which;
 
-const QEMU_URL: &str = "https://github.com/AFLplusplus/qemu-libafl-bridge";
+const QEMU_URL: &str = "https://github.com/ifratric/qemu-libafl-bridge/tree/main";
 const QEMU_DIRNAME: &str = "qemu-libafl-bridge";
 const QEMU_REVISION: &str = "9302a3a8174a45a14c77be316126f2673248be51";
 
@@ -133,6 +133,7 @@ pub fn build(
                 .status(),
         );*/
         if is_usermode && !custum_qemu_no_configure {
+            println!("QEMU Path: {}", qemu_path.to_string_lossy());
             let mut cmd = Command::new("./configure");
             cmd.current_dir(&qemu_path)
                 //.arg("--as-static-lib")

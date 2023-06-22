@@ -54,6 +54,7 @@ pub fn fuzz() {
     env::remove_var("LD_LIBRARY_PATH");
     let args: Vec<String> = env::args().collect();
     let env: Vec<(String, String)> = env::vars().collect();
+    println!("Initializing emulator...");
     let emu = Emulator::new(&args, &env).unwrap();
 
     let mut elf_buffer = Vec::new();
@@ -67,13 +68,13 @@ pub fn fuzz() {
     emu.set_breakpoint(test_one_input_ptr); // LLVMFuzzerTestOneInput
     unsafe { emu.run() };
 
-    println!("Break at {:#x}", emu.read_reg::<_, u64>(Regs::Rip).unwrap());
+    println!("Break at {:#x}", emu.read_reg::<_, u32>(Regs::Pc).unwrap());
 
     // Get the return address
-    let stack_ptr: u64 = emu.read_reg(Regs::Rsp).unwrap();
-    let mut ret_addr = [0; 8];
+    let stack_ptr: u32 = emu.read_reg(Regs::R29).unwrap();
+    let mut ret_addr = [0; 4];
     unsafe { emu.read_mem(stack_ptr, &mut ret_addr) };
-    let ret_addr = u64::from_le_bytes(ret_addr);
+    let ret_addr = emu.read_reg(Regs::Lr).unwrap();
 
     println!("Stack pointer = {stack_ptr:#x}");
     println!("Return address = {ret_addr:#x}");
@@ -99,10 +100,10 @@ pub fn fuzz() {
         unsafe {
             emu.write_mem(input_addr, buf);
 
-            emu.write_reg(Regs::Rdi, input_addr).unwrap();
-            emu.write_reg(Regs::Rsi, len).unwrap();
-            emu.write_reg(Regs::Rip, test_one_input_ptr).unwrap();
-            emu.write_reg(Regs::Rsp, stack_ptr).unwrap();
+            // emu.write_reg(Regs::Rdi, input_addr).unwrap();
+            // emu.write_reg(Regs::Rsi, len).unwrap();
+            // emu.write_reg(Regs::Rip, test_one_input_ptr).unwrap();
+            // emu.write_reg(Regs::Rsp, stack_ptr).unwrap();
 
             emu.run();
         }

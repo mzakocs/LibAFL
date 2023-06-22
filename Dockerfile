@@ -36,13 +36,13 @@ COPY libafl_frida/Cargo.toml libafl_frida/build.rs libafl_frida/
 COPY scripts/dummy.rs libafl_frida/src/lib.rs
 COPY libafl_frida/src/gettls.c libafl_frida/src/gettls.c
 
-COPY libafl_qemu/Cargo.toml libafl_qemu/build.rs libafl_qemu/
+COPY libafl_qemu/Cargo.toml libafl_qemu/build.rs libafl_qemu/build_linux.rs libafl_qemu/
 COPY scripts/dummy.rs libafl_qemu/src/lib.rs
 
 COPY libafl_qemu/libafl_qemu_build/Cargo.toml libafl_qemu/libafl_qemu_build/
 COPY scripts/dummy.rs libafl_qemu/libafl_qemu_build/src/lib.rs
 
-COPY libafl_qemu/libafl_qemu_sys/Cargo.toml libafl_qemu/libafl_qemu_sys/build.rs libafl_qemu/libafl_qemu_sys/
+COPY libafl_qemu/libafl_qemu_sys/Cargo.toml libafl_qemu/libafl_qemu_sys/build.rs libafl_qemu/libafl_qemu_sys/build_linux.rs libafl_qemu/libafl_qemu_sys/
 COPY scripts/dummy.rs libafl_qemu/libafl_qemu_sys/src/lib.rs
 
 COPY libafl_sugar/Cargo.toml libafl_sugar/
@@ -116,7 +116,13 @@ RUN cargo build && cargo build --release
 
 # Copy fuzzers over
 COPY fuzzers fuzzers
+copy fuzzers/qemu_launcher fuzzers/qemu_launcher
 
-# RUN ./scripts/test_all_fuzzers.sh --no-fmt
+RUN cargo install --force cargo-make
+
+WORKDIR fuzzers/qemu_launcher
+RUN cargo make run
+
+#RUN ./scripts/test_all_fuzzers.sh --no-fmt
 
 ENTRYPOINT [ "/bin/bash" ]

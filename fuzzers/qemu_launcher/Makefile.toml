@@ -2,6 +2,7 @@
 [env]
 FUZZER_NAME='libpng_harness'
 PROJECT_DIR = { script = ["pwd"] }
+CUSTOM_QEMU_DIR = "../../../qemu-libafl-bridge"
 
 [tasks.unsupported]
 script_runner="@shell"

@@ -80,9 +80,9 @@ pub mod snapshot;
 #[cfg(all(emulation_mode = "usermode", not(cpu_target = "hexagon")))]
 pub use snapshot::QemuSnapshotHelper;
 
-#[cfg(all(emulation_mode = "usermode", not(cpu_target = "hexagon")))]
+#[cfg(all(emulation_mode = "usermode"))]
 pub mod asan;
-#[cfg(all(emulation_mode = "usermode", not(cpu_target = "hexagon")))]
+#[cfg(all(emulation_mode = "usermode"))]
 pub use asan::{init_with_asan, QemuAsanHelper};
 
 #[cfg(not(cpu_target = "hexagon"))]

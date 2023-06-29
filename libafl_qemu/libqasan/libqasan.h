@@ -44,8 +44,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define QASAN_LOG(msg...)                   \
   do {                                      \
     if (__qasan_log) {                      \
-      fprintf(stderr, "==%d== ", getpid()); \
-      fprintf(stderr, msg);                 \
+      fprintf(stdout, "==%d== ", getpid()); \
+      fprintf(stdout, msg);                 \
     }                                       \
                                             \
   } while (0)
@@ -54,8 +54,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   #define QASAN_DEBUG(msg...)                 \
     do {                                      \
       if (__qasan_debug) {                    \
-        fprintf(stderr, "==%d== ", getpid()); \
-        fprintf(stderr, msg);                 \
+        fprintf(stdout, "==%d== ", getpid()); \
+        fprintf(stdout, msg);                 \
       }                                       \
                                               \
     } while (0)

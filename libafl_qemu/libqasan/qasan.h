@@ -72,6 +72,9 @@ enum {
 #define QASAN_ENABLED (0)
 #define QASAN_DISABLED (1)
 
+#define QASAN_LOG_ENV 0
+#define QASAN_DEBUG_ENV 0
+
 // fake syscall, works only for QASan user-mode!!!
 
 #include <unistd.h>

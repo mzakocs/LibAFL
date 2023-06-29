@@ -63,14 +63,15 @@ __attribute__((constructor)) void __libqasan_init() {
 
   __libqasan_init_hooks();
 
-  if (getenv("AFL_INST_LIBS") || getenv("QASAN_HOTPACH")) {
-    __libqasan_hotpatch();
-  }
+  // This does a lot of x86 asm patches, obviously not gonna work
+  // if (getenv("AFL_INST_LIBS") || getenv("QASAN_HOTPACH")) {
+  //   __libqasan_hotpatch();
+  // }
 
 #ifdef DEBUG
-  __qasan_debug = getenv("QASAN_DEBUG") != NULL;
+  __qasan_debug = QASAN_DEBUG_ENV != NULL;
 #endif
-  __qasan_log = getenv("QASAN_LOG") != NULL;
+  __qasan_log = QASAN_LOG_ENV != NULL;
 
   QASAN_LOG("QEMU-AddressSanitizer (v%s)\n", QASAN_VERSTR);
   QASAN_LOG(
@@ -83,7 +84,8 @@ __attribute__((constructor)) void __libqasan_init() {
 int __libc_start_main(int (*main)(int, char **, char **), int argc, char **argv,
                       int (*init)(int, char **, char **), void (*fini)(void),
                       void (*rtld_fini)(void), void *stack_end) {
-  typeof(&__libc_start_main) orig = dlsym(RTLD_NEXT, "__libc_start_main");
+  void *handle = dlopen("libc.so", RTLD_LOCAL | RTLD_LAZY);
+  typeof(&__libc_start_main) orig = dlsym(handle, "__libc_start_main");
 
   __libqasan_init();
 
